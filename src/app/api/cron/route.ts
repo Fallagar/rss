@@ -62,6 +62,8 @@ function contentParser(item: IFeedItem) {
 
         if (result.success) {
             return article;
+        } else {
+            return null;
         }
     } catch (error) {
         return null;
