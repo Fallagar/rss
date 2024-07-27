@@ -49,8 +49,6 @@ export async function PATCH(request: Request) {
     try {
         const data = await request.json();
         const { _id, hidden } = data;
-        console.log(data);
-        console.log("123", hidden, _id);
         const article = await Article.findByIdAndUpdate(
             _id,
             { hidden },

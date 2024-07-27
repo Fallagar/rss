@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Parser from "rss-parser";
 import cheerio from "cheerio";
 import { connectDB } from "../../../lib/mongodb";
@@ -65,7 +65,13 @@ function contentParser(item: IFeedItem) {
         return null;
     }
 }
-export async function GET() {
+export async function GET(request: NextRequest) {
+    const authHeader = request.headers.get("authorization");
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+        return new Response("Unauthorized", {
+            status: 401,
+        });
+    }
     await connectDB();
     const feed = await parser.parseURL("http://www.reddit.com/.rss?limit=20");
 
@@ -85,5 +91,5 @@ export async function GET() {
         );
     }
 
-    return NextResponse.json({ feed });
+    return NextResponse.json({ ok: true });
 }

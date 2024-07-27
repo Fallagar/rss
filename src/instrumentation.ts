@@ -6,7 +6,7 @@ export function register() {
     setInterval(async () => {
         try {
             // await axios.get(`${NEXT_SERVER_URL}/api/fetch-rss`);
-            await axios.get(`/api/fetch-rss`);
+            // await axios.get(`/api/fetch-rss`);
             // console.log("FETCH HAPPENED", `${NEXT_SERVER_URL}/api/fetch-rss`);
         } catch (error: any) {
             console.log(error);

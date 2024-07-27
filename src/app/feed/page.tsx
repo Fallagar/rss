@@ -3,28 +3,30 @@ import ArticlesList from "../../components/articlesList";
 import { connectDB } from "../../lib/mongodb";
 import Article from "../../models/Article";
 import { IArticle } from "../../types/types";
+import { unstable_cache } from "next/cache";
 
-// const ArticlesPage = ({ initialArticles }: { initialArticles: Article[] }) => {
-//     return <ArticlesList initialArticles={initialArticles} />;
-// };
+const getCahchedData = unstable_cache(
+    async () => {
+        await connectDB();
 
-async function getData() {
-    await connectDB();
-
-    try {
-        const articles: IArticle[] = await Article.find({
-            hidden: false,
-        }).lean();
-        //@ts-ignore
-        return JSON.parse(JSON.stringify(articles));
-    } catch (error) {
-        console.error(error);
-        return [];
+        try {
+            const articles: IArticle[] = await Article.find({
+                hidden: false,
+            });
+            return JSON.parse(JSON.stringify(articles));
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    },
+    [""],
+    {
+        revalidate: 60000,
     }
-}
+);
 
 export default async function Page() {
-    const data = await getData();
+    const data = await getCahchedData();
 
     return <ArticlesList initialArticles={data} />;
 }
