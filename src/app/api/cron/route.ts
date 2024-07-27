@@ -5,6 +5,7 @@ import { connectDB } from "../../../lib/mongodb";
 import Article from "../../../models/Article";
 import { IArticle, IFeedItem } from "../../../types/types";
 const parser = new Parser();
+export const dynamic = "force-dynamic";
 import { z } from "zod";
 const articleSchemaZod = z.object({
     title: z.string().min(1),
