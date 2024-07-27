@@ -5,25 +5,20 @@ import Article from "../../models/Article";
 import { IArticle } from "../../types/types";
 import { unstable_cache } from "next/cache";
 
-const getCahchedData = unstable_cache(
-    async () => {
-        await connectDB();
+export const dynamic = "force-dynamic";
+const getCahchedData = async () => {
+    await connectDB();
 
-        try {
-            const articles: IArticle[] = await Article.find({
-                hidden: false,
-            });
-            return JSON.parse(JSON.stringify(articles));
-        } catch (error) {
-            console.error(error);
-            return [];
-        }
-    },
-    [""],
-    {
-        revalidate: 60000,
+    try {
+        const articles: IArticle[] = await Article.find({
+            hidden: false,
+        });
+        return JSON.parse(JSON.stringify(articles));
+    } catch (error) {
+        console.error(error);
+        return [];
     }
-);
+};
 
 export default async function Page() {
     const data = await getCahchedData();
