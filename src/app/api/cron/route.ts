@@ -85,5 +85,5 @@ export async function GET(request: NextRequest) {
         );
     }
 
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ feed, array: Array.isArray(feed.items) });
 }
