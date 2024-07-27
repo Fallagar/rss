@@ -59,7 +59,8 @@ function contentParser(item: IFeedItem) {
     };
     try {
         const result = articleSchemaZod.safeParse(article);
-        if (!result.success) {
+
+        if (result.success) {
             return article;
         }
     } catch (error) {
@@ -74,6 +75,7 @@ export async function GET(request: NextRequest) {
         const articles = feed.items.map((item) =>
             contentParser(item as IFeedItem)
         );
+        console.log(articles);
         const savedArticles = await Promise.all(
             articles.map(async (article) => {
                 try {
